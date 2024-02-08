@@ -1,4 +1,4 @@
-# Import necessary modules
+# Import necessary modules new commit
 from flask import Flask, jsonify, request
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import func , or_
@@ -96,6 +96,21 @@ class FilmCategory(db.Model):
     last_update = db.Column(db.DateTime)
     film = db.relationship('Film', backref=db.backref('film_categories'))
     category = db.relationship('Category', backref=db.backref('film_categories'))
+
+class Customer(db.Model):
+    __tablename__ = 'customer'
+
+    customer_id = db.Column(db.Integer, primary_key=True)
+    store_id = db.Column(db.Integer, db.ForeignKey('store.store_id'), nullable=False)
+    first_name = db.Column(db.String(45), nullable=False)
+    last_name = db.Column(db.String(45), nullable=False)
+    email = db.Column(db.String(50))
+    address_id = db.Column(db.Integer, db.ForeignKey('address.address_id'), nullable=False)
+    active = db.Column(db.Boolean, nullable=False, default=True)
+    create_date = db.Column(db.DateTime, nullable=False)
+    last_update = db.Column(db.DateTime, nullable=False)
+
+
 
 @app.route('/', methods=['GET'])
 def get_actors():
@@ -255,6 +270,28 @@ def search_films():
 
     return jsonify(films_json)
 
+
+@app.route('/customers', methods=['GET'])
+def get_customers():
+    try:
+        customers = Customer.query.all()
+        customer_list = []
+        for customer in customers:
+            customer_info = {
+                'customer_id': customer.customer_id,
+                'store_id': customer.store_id,
+                'first_name': customer.first_name,
+                'last_name': customer.last_name,
+                'email': customer.email,
+                'address_id': customer.address_id,
+                'active': customer.active,
+                'create_date': customer.create_date.isoformat(),
+                'last_update': customer.last_update.isoformat()
+            }
+            customer_list.append(customer_info)
+        return jsonify({'customers': customer_list}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
 # Run the Flask app
 if __name__ == "__main__":
     app.run(debug=True)

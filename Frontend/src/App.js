@@ -172,19 +172,69 @@ const Movies = () => {
 };
 
 
-const Customers = () => (
-  <div>
-    <h1>Customers Page - Add stuff here</h1>
-    <p>This is the customers page. You can add your content related to customers here.</p>
-  </div>
-);
+const Customers = () => {
+  const [customerData, setCustomerData] = useState([]);
+  const [showCustomers, setShowCustomers] = useState(false);
 
-const Report = () => (
-  <div>
-    <h1>Report Page - Add stuff here</h1>
-    <p>This is the report page. You can add your content related to reports here.</p>
-  </div>
-);
+  const fetchCustomers = () => {
+    if (showCustomers) {
+      setCustomerData([]);
+    } else {
+      fetch('http://localhost:5000/customers')
+        .then(response => response.json())
+        .then(data => {
+          setCustomerData(data.customers);
+        })
+        .catch(error => console.error('Error fetching customers:', error));
+    }
+    setShowCustomers(!showCustomers);
+  };
+
+  return (
+    <div>
+      <h1>Customers Page</h1>
+      <p>This is the customers page.</p>
+      <button onClick={fetchCustomers}>{showCustomers ? 'Hide Customers' : 'Load Customers'}</button>
+      {showCustomers && (
+        <div>
+          {customerData.length > 0 ? (
+            <table>
+              <thead>
+                <tr>
+                  <th>Customer ID</th>
+                  <th>First Name</th>
+                  <th>Last Name</th>
+                  <th>Email</th>
+                  <th>Address ID</th>
+                  <th>Active</th>
+                  <th>Create Date</th>
+                  <th>Last Update</th>
+                </tr>
+              </thead>
+              <tbody>
+                {customerData.map(customer => (
+                  <tr key={customer.customer_id}>
+                    <td>{customer.customer_id}</td>
+                    <td>{customer.first_name}</td>
+                    <td>{customer.last_name}</td>
+                    <td>{customer.email}</td>
+                    <td>{customer.address_id}</td>
+                    <td>{customer.active ? 'Yes' : 'No'}</td>
+                    <td>{customer.create_date}</td>
+                    <td>{customer.last_update}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          ) : (
+            <p>No customers found.</p>
+          )}
+        </div>
+      )}
+    </div>
+  );
+};
+
 
 const App = () => {
   return (
@@ -201,16 +251,12 @@ const App = () => {
             <li>
               <Link to="/customers">Customers</Link>
             </li>
-            <li>
-              <Link to="/report">Report</Link>
-            </li>
           </ul>
         </nav>
 
         <Routes>
           <Route path="/movies" element={<Movies />} />
           <Route path="/customers" element={<Customers />} />
-          <Route path="/report" element={<Report />} />
           <Route path="/" element={<Home />} />
         </Routes>
       </div>
