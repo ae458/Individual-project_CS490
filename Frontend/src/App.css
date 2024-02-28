@@ -73,3 +73,28 @@ li:hover {
   background-color: #e6f7ff;
   border: 1px solid #99c2ff;
 }
+
+ul.page {
+  list-style-type: none;
+  padding: 0;
+  margin: 20px 0;
+}
+
+ul.page li {
+  display: inline-block;
+  margin-right: 5px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  background-color: #f5f5f5;
+}
+
+ul.page li:hover {
+  background-color: #e0e0e0;
+}
+
+ul.page li.active {
+  background-color: #007bff;
+  color: #fff;
+  border-color: #007bff;
+}
