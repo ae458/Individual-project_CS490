@@ -247,6 +247,8 @@ const Movies = () => {
         </div>
       )}
 
+<div>
+      <h1>Movies Page</h1>
       <p>Search Movies by Title or actors name or the Category</p>
       <input
         type="text"
@@ -255,6 +257,25 @@ const Movies = () => {
         onChange={(e) => setKeyword(e.target.value)}
       />
       <button onClick={handleSearch}>Search</button>
+
+      <div>
+      
+        <ul>
+          {films.map((film) => (
+            <li key={film.film_id}>
+              <h3>{film.title}</h3>
+              <p> Release_year : {film.release_year}</p>
+              <p> rental_duration: {film.rental_duration} days</p>
+              <p> rental_rate :{film.rental_rate}</p>
+              <p> length: {film.length}</p>
+              <p> rating {film.rating}</p>
+              <p> special_features {film.special_features}</p>
+              {/* Render other film details as needed */}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
     </div>
   );
 };
